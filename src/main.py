@@ -22,7 +22,7 @@ def create_gabor_filterbank(ksize, sigma, gamma, psi, orientations, wavelengths)
     filterbank = {}
     for theta in orientations:
         for wavelength in wavelengths:
-            key = f"theta_{theta}_wavelength_{wavelength}"
+            key = f"theta_{round(theta, 3)}_wavelength_{round(wavelength, 3)}"
             gabor_kernel = gabor_filter(ksize, sigma, theta, wavelength, gamma, psi)
             filterbank[key] = gabor_kernel
     return filterbank
