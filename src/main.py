@@ -18,36 +18,65 @@ def gabor_filter(ksize, sigma, theta, lambd, gamma, psi):
     """
     return cv2.getGaborKernel((ksize,ksize), sigma, theta, lambd, gamma, psi)
 
-# Erstelle eine Filterbank mit verschiedenen Orientierungen und Wellenlaengen
+def create_gabor_filterbank(ksize, sigma, gamma, psi, orientations, wavelengths):
+    filterbank = {}
+    for theta in orientations:
+        for wavelength in wavelengths:
+            key = f"theta_{theta}_wavelength_{wavelength}"
+            gabor_kernel = gabor_filter(ksize, sigma, theta, wavelength, gamma, psi)
+            filterbank[key] = gabor_kernel
+    return filterbank
+
+# Filterbank parameter
 ksize = 21          # Groesse Filterkernel
 sigma = 5.0         # Standardabweichung
-theta = np.pi/4     # 45 Grad
-lambd = 10.0        # Wellenlaenge
 gamma = 0.5         # Skalierung
 psi = 0             # Phasenverschiebung
+orientations = [0, np.pi/4, np.pi/2, 3*np.pi/4] # 4 Orientierungen
+wavelengths = [1, 5, 10, 20]   # 3 verschiedene Wellenlängen
+
+# Erzeuge Gabor-Filterbank
+filterbank = create_gabor_filterbank(ksize, sigma, gamma, psi, orientations, wavelengths)
+
+# Speichere Gabor-Filter als bilder
+for key, gabor_kernel in filterbank.items():
+    plt.imshow(gabor_kernel, cmap='gray')
+    plt.title(f"Gabor Filter {key}")
+    plt.axis('off')
+    plt.savefig(f"../out/{key}_gabor_kernel.png", dpi=300, bbox_inches='tight', transparent=False)
 
 
-# Erzeuge filter
-gabor_kernel = gabor_filter(ksize, sigma, theta, lambd, gamma, psi)
+# Anwenden der Filterbank auf das Bild und Visualisierung der Ergebnisse
+filtered_images = []
+for key, gabor_kernel in filterbank.items():
+    filtered_image = cv2.filter2D(image, -1, gabor_kernel)
+    filtered_images.append(filtered_image)
 
-filtered_image = cv2.filter2D(image, -1, gabor_kernel)
+# Visualisierung der gefilterten Bilder
+plt.figure(figsize=(15,10))
+for i, filtered_image in enumerate(filtered_images):
+    plt.subplot(len(orientations), len(wavelengths), i+1)
+    plt.imshow(filtered_image, cmap='gray')
+    plt.title(f"Filtered with {list(filterbank.keys())[i]}")
+    plt.axis('off')
 
-plt.figure(figsize=(10,5))
+plt.tight_layout()
+plt.show()
 
-plt.subplot(1, 3, 1)                # Originalbild
-plt.imshow(image, cmap='gray')
-plt.title('Originalbild')
-plt.axis('off')
+# Segmentierung: Schwellenwert-basierte Segmentierung für das Baum-Hintergrund-Bild
+# Zum Beispiel mit Otsu's Schwellenwertverfahren für jedes gefilterte Bild
+thresholded_images = []
+for filtered_image in filtered_images:
+    _, thresholded_image = cv2.threshold(filtered_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    thresholded_images.append(thresholded_image)
 
-plt.subplot(1, 3, 2)                # Gabor-Filter
-plt.imshow(gabor_kernel, cmap='gray')
-plt.title('Gabor-Filter')
-plt.axis('off')
+# Visualisierung der segmentierten Bilder
+plt.figure(figsize=(15, 10))
+for i, thresholded_image in enumerate(thresholded_images):
+    plt.subplot(len(orientations), len(wavelengths), i+1)
+    plt.imshow(thresholded_image, cmap='gray')
+    plt.title(f"Segmented {list(filterbank.keys())[i]}")
+    plt.axis('off')
 
-plt.subplot(1, 3, 3)                # Gefiltertes Bild
-plt.imshow(filtered_image, cmap='gray')
-plt.title('Bild mit Gabor-Filter')
-plt.axis('off')
-
-plt.savefig('../out/gabor_filter.png', dpi=300, bbox_inches='tight', transparent=False)
+plt.tight_layout()
 plt.show()
