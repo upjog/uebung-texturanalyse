@@ -49,5 +49,5 @@ plt.imshow(filtered_image, cmap='gray')
 plt.title('Bild mit Gabor-Filter')
 plt.axis('off')
 
-plt.savefig('../out/gabor_filter.png')
+plt.savefig('../out/gabor_filter.png', dpi=300, bbox_inches='tight', transparent=False)
 plt.show()
