@@ -52,6 +52,7 @@ orientations = [0, np.pi/4, np.pi/2, 3*np.pi/4] # 4 Orientierungen
 # n = int(np.floor(np.log2(wavelength_max / wavelength_min)))
 # wavelengths = wavelength_min * 2 ** np.arange(0,n-1)
 wavelengths = [4,6,8]                         # Manuelle Wellenlängen
+safe_wavelengths = '-'.join(map(str, wavelengths))  # Wandelt die Wellenlängen in einen String ohne Sonderzeichen um
 
 k_sigma = 1.0                                 # Faktor für Standardabweichung
 
@@ -83,7 +84,8 @@ for i, filtered_image in enumerate(filtered_images):
     plt.axis('off')
 
 plt.tight_layout()
-plt.savefig(f"../out/filterbank_applied_to_image_k_sigma{k_sigma}_wavel_{wavelengths}.png", dpi=300, bbox_inches='tight', transparent=False)
+filterbank_to_image_filename = f"filterbank_applied_to_image_k_sigma{k_sigma}_wavel_{safe_wavelengths}.png"
+plt.savefig(f"../out/{filterbank_to_image_filename}", dpi=300, bbox_inches='tight', transparent=False)
 #plt.show()
 
 # Feature-Vektoren erstellen für jedes Pixel: Gabor-Filter-Energie + Geometrische Informationen
@@ -120,9 +122,11 @@ kmeans.fit(features)
 segmented_image = kmeans.labels_.reshape(image.shape)
 
 # Visualisierung der segmentierten Ergebnisse
+safe_wavelengths = '-'.join(map(str, wavelengths))  # Wandelt die Wellenlängen in einen String ohne Sonderzeichen um
 plt.figure(figsize=(10, 8))
 plt.imshow(segmented_image, cmap='jet')
 plt.title('Segmentiertes Bild nach K-Means')
 plt.axis('off')
-plt.savefig(f'../out/segmented_image_kmeans_k_sigma_{k_sigma}_wavel_{wavelengths}.png', dpi=300, bbox_inches='tight', transparent=False)
+segmented_image_filename = f"segmented_image_kmeans_k_sigma_{k_sigma}_wavel_{safe_wavelengths}.png"
+plt.savefig(f'../out/{segmented_image_filename}', dpi=300, bbox_inches='tight', transparent=False)
 plt.show()
