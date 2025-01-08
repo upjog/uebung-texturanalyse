@@ -14,6 +14,7 @@ def gabor_filter(ksize, sigma, theta, lambd, gamma, psi):
 
     :param ksize: Groesse des Filterkernels
     :param sigma: Standardabweichung der Gauss-Verteilung
+    :param theta: Orientierung des Filters
     :param lambd: Wellenlaenge der Sinuswelle
     :param gamma: Skalierung
     :param psi: Phasenverschiebung

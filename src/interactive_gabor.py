@@ -4,7 +4,7 @@ from matplotlib.widgets import Slider, Button
 import cv2
 
 # Initial parameters
-ksize = 50
+ksize = 5
 sigma = 3
 theta = np.pi / 4
 lambd = np.pi / 4
@@ -64,16 +64,16 @@ ax.axis('off')
 
 # Add sliders to the right of the image
 ax_ksize = plt.axes([0.7, 0.75, 0.15, 0.03], facecolor='lightgoldenrodyellow')
-slider_ksize = Slider(ax_ksize, 'Ksize', 10, 100, valinit=ksize, valstep=2)
+slider_ksize = Slider(ax_ksize, 'Ksize', 3, 100, valinit=ksize, valstep=2)
 
 ax_sigma = plt.axes([0.7, 0.65, 0.15, 0.03], facecolor='lightgoldenrodyellow')
 slider_sigma = Slider(ax_sigma, 'Sigma', 1, 10, valinit=sigma)
 
 ax_theta = plt.axes([0.7, 0.55, 0.15, 0.03], facecolor='lightgoldenrodyellow')
-slider_theta = Slider(ax_theta, 'Theta', 0, np.pi, valinit=theta)
+slider_theta = Slider(ax_theta, 'Theta', 0, 2*np.pi, valinit=theta)
 
 ax_lambd = plt.axes([0.7, 0.45, 0.15, 0.03], facecolor='lightgoldenrodyellow')
-slider_lambd = Slider(ax_lambd, 'Lambda', 0, np.pi, valinit=lambd)
+slider_lambd = Slider(ax_lambd, 'Lambda', 0, 2*np.pi, valinit=lambd)
 
 ax_gamma = plt.axes([0.7, 0.35, 0.15, 0.03], facecolor='lightgoldenrodyellow')
 slider_gamma = Slider(ax_gamma, 'Gamma', 0.1, 1, valinit=gamma)
