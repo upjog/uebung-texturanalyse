@@ -1,5 +1,8 @@
 # Uebung 1 zu Objektextraktion: Texturanalyse mit dem Gabor-Filter
 
+## Google Drive Präsentation
+[Gabor-Filter](https://docs.google.com/presentation/d/14SjZZfaMBFQu1au9Zh6sT888lLA81IJ94J1iDLPqCm4/edit?usp=sharing)
+
 ## Hilfreiche Links:
 - [Youtube-Video zum Gabor-Filter](https://www.youtube.com/watch?v=QEz4bG9P3Qs)
 - [Basic Beispiel zum erstellen von Gabor-Filterkerneln mit openCV](https://www.geeksforgeeks.org/opencv-getgaborkernel-method/)
