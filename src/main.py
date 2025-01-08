@@ -4,8 +4,9 @@ import cv2
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler  # Importiere StandardScaler
 
-image_path = '../images/combine.png'
+image_path = './images/combine.png'
 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
 
 def gabor_filter(ksize, sigma, theta, lambd, gamma, psi):
     """
@@ -13,6 +14,7 @@ def gabor_filter(ksize, sigma, theta, lambd, gamma, psi):
 
     :param ksize: Groesse des Filterkernels
     :param sigma: Standardabweichung der Gauss-Verteilung
+    :param theta: Orientierung des Filters
     :param lambd: Wellenlaenge der Sinuswelle
     :param gamma: Skalierung
     :param psi: Phasenverschiebung
@@ -67,13 +69,15 @@ for key, gabor_kernel in filterbank.items():
     plt.imshow(gabor_kernel, cmap='gray')
     plt.title(f"Gabor Filter {key}")
     plt.axis('off')
-    plt.savefig(f"../out/{key}_gabor_kernel.png", dpi=300, bbox_inches='tight', transparent=False)
+    plt.savefig(f"./out/{key}_gabor_kernel.png", dpi=300, bbox_inches='tight', transparent=False)
 
 # Anwenden der Filterbank auf das Bild und Visualisierung der Ergebnisse
 filtered_images = []
 for key, gabor_kernel in filterbank.items():
     filtered_image = cv2.filter2D(image, cv2.CV_8UC3, gabor_kernel)
     filtered_images.append(filtered_image)
+    
+print(len(filtered_images))
 
 # Visualisierung der gefilterten Bilder
 plt.figure(figsize=(15,10))
@@ -85,7 +89,7 @@ for i, filtered_image in enumerate(filtered_images):
 
 plt.tight_layout()
 filterbank_to_image_filename = f"filterbank_applied_to_image_k_sigma{k_sigma}_wavel_{safe_wavelengths}.png"
-plt.savefig(f"../out/{filterbank_to_image_filename}", dpi=300, bbox_inches='tight', transparent=False)
+plt.savefig(f"./out/{filterbank_to_image_filename}", dpi=300, bbox_inches='tight', transparent=False)
 #plt.show()
 
 # Feature-Vektoren erstellen für jedes Pixel: Gabor-Filter-Energie + Geometrische Informationen
@@ -128,5 +132,5 @@ plt.imshow(segmented_image, cmap='jet')
 plt.title('Segmentiertes Bild nach K-Means')
 plt.axis('off')
 segmented_image_filename = f"segmented_image_kmeans_k_sigma_{k_sigma}_wavel_{safe_wavelengths}.png"
-plt.savefig(f'../out/{segmented_image_filename}', dpi=300, bbox_inches='tight', transparent=False)
+plt.savefig(f'./out/{segmented_image_filename}', dpi=300, bbox_inches='tight', transparent=False)
 plt.show()
