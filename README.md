@@ -14,3 +14,17 @@
 
 ## Sonstige Links:
 - [Gabor-Filter für Edge Detection](https://www.freedomvc.com/index.php/2021/10/16/gabor-filter-in-edge-detection/)
+
+
+## TODO:
+- Zu klärende Themen
+  - Optimale Kernelgröße
+  - Optimale Wellenlängen / welche verwenden? Immer Alle oder nur kleiner bereich?
+  - Normierung (MinMax vs Z-Normalisierung)
+  - Workflow Segmentierung (K-Means vs andere Verfahren)
+
+- Abbildungen zur Wirkungsweise des Gabor-Filters erstellen
+  - Originalbild
+  - Gabor-Filterkernel bzw. -Filterbank
+  - Produkt der Filterantworten
+  - Segmentierungsergebnis (wenn vorhanden)
