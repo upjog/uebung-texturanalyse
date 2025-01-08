@@ -7,7 +7,6 @@ from sklearn.preprocessing import StandardScaler  # Importiere StandardScaler
 image_path = './images/combine.png'
 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
-
 def gabor_filter(ksize, sigma, theta, lambd, gamma, psi):
     """
     Erstelle Gabor-Filter mit folgenden Parametern:
@@ -76,7 +75,7 @@ filtered_images = []
 for key, gabor_kernel in filterbank.items():
     filtered_image = cv2.filter2D(image, cv2.CV_8UC3, gabor_kernel)
     filtered_images.append(filtered_image)
-    
+
 print(len(filtered_images))
 
 # Visualisierung der gefilterten Bilder
