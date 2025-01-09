@@ -76,7 +76,7 @@ ax_lambd = plt.axes([0.7, 0.45, 0.15, 0.03], facecolor='lightgoldenrodyellow')
 slider_lambd = Slider(ax_lambd, 'Lambda', 0, 2*np.pi, valinit=lambd)
 
 ax_gamma = plt.axes([0.7, 0.35, 0.15, 0.03], facecolor='lightgoldenrodyellow')
-slider_gamma = Slider(ax_gamma, 'Gamma', 0.1, 1, valinit=gamma)
+slider_gamma = Slider(ax_gamma, 'Gamma', 0.1, 5, valinit=gamma)
 
 ax_phi = plt.axes([0.7, 0.25, 0.15, 0.03], facecolor='lightgoldenrodyellow')
 slider_phi = Slider(ax_phi, 'Phi', 0, 2*np.pi, valinit=phi)
