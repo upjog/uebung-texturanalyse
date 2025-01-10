@@ -2,9 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
-image_path = './images/poolraum_bsp.jpg'
+struktur_frequenzen = {'combine.png': [1],
+                       'hund.png': [1],
+                       'IMAG0224.jpg': [6,12,18,24],
+                       'IMG_3156.JPG': [15,20,25,30],
+                       'poolraum_bsp.jpg': [15,20,25], #12,25,70,140
+                       'text.png':[1],
+                       'woodring.png':[7,14,21,28]}
+
+index = 3
+
+image_name = list(struktur_frequenzen.keys())[index]
+image_path = './images/'+image_name
 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
+test = image_name[:-4]
 
 # Filterbank parameter
 width, height = image.shape                     # Breite und Hoehe des Bildes
@@ -20,12 +32,14 @@ orientations = [0, np.pi/4, np.pi/2, 3*np.pi/4]
 lambd_min = 2*np.sqrt(2)
 # Max: längeste mögl. Wellenlänge ist die Hypotenuse der Bilddimensionen
 #       -> von einer Ecke in die gegenüberleigende
-lambd_max = np.sqrt(np.abs(width)**2 + np.abs(height)**2)/2
+lambd_max = np.sqrt(np.abs(width)**2 + np.abs(height)**2)
 # n: Wie viele Schritte können wir von min bis max machen, wenn wir den Exponenten von 2 erhöhen
 n = int(np.log2(lambd_max/lambd_min)) 
-wavelengths = 2**np.arange((n-1)) * lambd_min       # Wellenlängen
-wavelengths = wavelengths[:2]               # begrenzen, da größeres lambda kein anschauliches ergebnis erzeugt
-k_sigma = 2.0                                 # Faktor für Standardabweichung
+wavelengths2 = 2**np.arange((n-1)) * lambd_min       # Wellenlängen
+# wavelengths = wavelengths[:2]*2               # begrenzen, da größeres lambda kein anschauliches ergebnis erzeugt
+wavelengths = struktur_frequenzen[image_name]
+# wavelengths.extend([lam for lam in wavelengths2 if lam > wavelengths[-1]])
+k_sigma = 12.0                                 # Faktor für Standardabweichung
 
 filterbank = {}
 filtered_img_bank = []
@@ -47,5 +61,14 @@ for idx, filtered_img in enumerate(filtered_img_bank):
     plt.axis('off')
 
 plt.tight_layout()
-plt.savefig(f"./out/response_collection_lambdaMax_{round(lambd,1)}.png",dpi=300, bbox_inches='tight',transparent=False)
+plt.savefig(f"./out/{image_name[:-4]}_response_collection_lambdaMax_{round(lambd,1)}.png",dpi=300, bbox_inches='tight',transparent=False)
+# plt.show()
+
+
+# plt.figure()
+# plt.imshow(kernel)
+# plt.title(f"Gabor Filter {key}")
+# plt.axis('off')
+# plt.colorbar()
+# # plt.savefig(f"./out/{key}_gabor_kernel.png", dpi=300, bbox_inches='tight', transparent=False)
 # plt.show()
