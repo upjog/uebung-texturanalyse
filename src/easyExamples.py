@@ -34,13 +34,13 @@ struktur_frequenzen = {'combine.png': [4,6,8,10,30],
                        'text.png':[3,7,10,14],
                        'woodring.png':[9,18,27,38]} #7,14,21,28
 # 0 - 6
-index = 6
+index = 1
 
 image_name = list(struktur_frequenzen.keys())[index]
 image_path = './images/'+image_name
 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
-test = image_name[:-4]
+variable_kernel = True
 
 # Filterbank parameter
 width, height = image.shape                     # Breite und Hoehe des Bildes
@@ -71,12 +71,17 @@ wavelengths2 = 2**np.arange((n-1)) * lambd_min       # Wellenlängen als Potenze
 # # Sonst wird die manuelle Wellenlänge ergänzt
 # wavelengths = rep_or_ins(wavelengths,wavelengths2,3)
 
+if variable_kernel:
+    ksize = 3*np.array(wavelengths)
+
 filterbank = {}
 filtered_img_bank = []
 # loop über wellenlängen, dann loop über orientierungen
 for lambd in wavelengths:
+    i = 0
     for theta in orientations:
-        kernel = cv2.getGaborKernel((ksize,ksize), k_sigma, theta, lambd, gamma, psi)
+        kernel = cv2.getGaborKernel((ksize[i],ksize[i]), k_sigma, theta, lambd, gamma, psi)
+        i += 1
         key = f"theta_{int(theta*180/np.pi)}_lambda_{round(lambd,1)}"
         filterbank[key] = kernel
         filterresponse = cv2.filter2D(image,cv2.CV_8UC3, kernel)
@@ -90,7 +95,7 @@ for idx, filtered_img in enumerate(filtered_img_bank):
     plt.axis('off')
 
 plt.tight_layout()
-plt.savefig(f"./out/response_collection_{image_name[:-4]}_lambdaMax_{round(lambd,1)}.png",dpi=300, bbox_inches='tight',transparent=False)
+plt.savefig(f"./out/response_collection_dynKernel_{variable_kernel}_{image_name[:-4]}_lambdaMax_{round(lambd,1)}.png",dpi=300, bbox_inches='tight',transparent=False)
 
 
 # plt.figure()
