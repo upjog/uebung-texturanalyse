@@ -15,7 +15,7 @@ def rep_or_ins(arr1, arr2, maxDiff):
 
     for num in arr1:
         idx = np.abs(arr_return - num).argmin()
-        diff = arr2[idx] - num
+        diff = arr_return[idx] - num
 
         if np.abs(diff) <= maxDiff: # num ist nahe an einer Potenz von 2 und ersetzt diese
             arr_return[idx] = num
@@ -41,6 +41,7 @@ image_path = './images/'+image_name
 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
 variable_kernel = True
+# variable_kernel = False
 
 # Filterbank parameter
 width, height = image.shape                     # Breite und Hoehe des Bildes
@@ -69,22 +70,26 @@ wavelengths2 = 2**np.arange((n-1)) * lambd_min       # Wellenlängen als Potenze
 # # Kombination von beiden Lsiten. Wenn die manuell festgelegte Wellenlänge nahe an einer Potenz von 
 # # 2 liegt, ersetzt diese den entsprechenden Eintrag in der automatisch generierten Liste.
 # # Sonst wird die manuelle Wellenlänge ergänzt
-# wavelengths = rep_or_ins(wavelengths,wavelengths2,3)
+wavelengths = rep_or_ins(wavelengths,wavelengths2,3)
 
 if variable_kernel:
-    ksize = 3*np.array(wavelengths)
+    ksize = 3*np.array(wavelengths).astype(int)
+    # entferne alle Kernelgrößen die größer als die kleinere Bilddimension sind
+    # ksize = ksize[ksize < min(width,height)] # damit würde die innere Schleife kaputt gehen
 
 filterbank = {}
 filtered_img_bank = []
-# loop über wellenlängen, dann loop über orientierungen
-for lambd in wavelengths:
-    i = 0
+# loop über orientierungen, dann loop über wellenlängen
+for i, lambd in enumerate(wavelengths):
+    if isinstance(ksize,np.ndarray):
+        kernel_size = (ksize[i],ksize[i])
+    else:
+        kernel_size = (ksize,ksize)
     for theta in orientations:
-        kernel = cv2.getGaborKernel((ksize[i],ksize[i]), k_sigma, theta, lambd, gamma, psi)
-        i += 1
+        kernel = cv2.getGaborKernel(kernel_size, k_sigma, theta, lambd, gamma, psi)
         key = f"theta_{int(theta*180/np.pi)}_lambda_{round(lambd,1)}"
         filterbank[key] = kernel
-        filterresponse = cv2.filter2D(image,cv2.CV_8UC3, kernel)
+        filterresponse = cv2.filter2D(image,cv2.CV_32FC1, kernel)
         filtered_img_bank.append(filterresponse)
 
 plt.figure(figsize=(15,10))
