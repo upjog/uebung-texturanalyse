@@ -2,7 +2,7 @@
 # Uebung 1: Texturanalyse
 # Gruppe: Jan, Korvin, Ramon,
 #
-# Visualisierung der Wirkung des Verfahren an einfachen Bildern:    Bild mit Text (text.png)
+# Visualisierung der Wirkung des Verfahren an einfachen Bildern:    Bild mit Texturen (combine.png)
 # ==========================================================================================
 # 1. Erzeuge Gabor-Filterbank
 # 2. Wende Filter auf Bild an
@@ -13,12 +13,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
-image_path = '../images/text.png'                      # Bildimport Linux
-#image_path = './images/text.png'                       # Bildimport Windows
+image_path = '../images/combine.png'                      # Bildimport Linux
+#image_path = './images/combine.png'                       # Bildimport Windows
 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
-out_path = '../out/text/'   # Linux
-#out_path = './out/text'     # Windows
+out_path = '../out/combine/'   # Linux
+#out_path = './out/combine'     # Windows
 
 colormap = 'jet'            # Auswahl der Colorbar
 #colormap = 'gray'
@@ -33,8 +33,8 @@ psi = 0                     # Phasenverschiebung der Sinusfunktion
 sigma = 5.0                 # Standardabweichung
 
 # Winkelausrichtung der Sinusfunktion
-orientations = [0, np.pi/4, np.pi/2, 3*np.pi/4]
-#orientations = [0, np.pi/6, np.pi/3, np.pi/2, 2*np.pi/3, 5*np.pi/6]
+#orientations = [0, np.pi/4, np.pi/2, 3*np.pi/4]
+orientations = [0, np.pi/6, np.pi/3, np.pi/2, 2*np.pi/3, 5*np.pi/6]
 
 # Wellenlänge
 # --------------------------------------------------
@@ -48,7 +48,7 @@ orientations = [0, np.pi/4, np.pi/2, 3*np.pi/4]
 #       -> von einer Ecke in die gegenüberleigende
 # --------------------------------------------------
 
-lambd_min = 2*np.sqrt(2)
+lambd_min = 2*np.sqrt(2)    # 2* np.sqrt(2)
 lambd_max = np.sqrt(np.abs(width)**2 + np.abs(height)**2)/2
 n = int(np.log2(lambd_max/lambd_min))               # Anzahl an Schritten min->max mit Exponent von 2
 print("Number of wavelength steps: ", n)
@@ -89,7 +89,7 @@ plt.tight_layout()
 plt.savefig(out_path + "Filterbank.png")
 
 # Gefiltertes Bild (normalisiert)
-plt.figure(figsize=(12,6))
+plt.figure(figsize=(12,18))
 for idx, filtered_img_normalized in enumerate(filtered_img_bank_normalized):
     plt.subplot(len(wavelengths),len(orientations),idx+1)
     plt.imshow(filtered_img_normalized, cmap=colormap)
@@ -117,7 +117,7 @@ for idx_lambda, lambd in enumerate(wavelengths):
     sum_filtered_images.append(summed_image)
 
 # Visualisierung der Summenbilder für jede gewählte Wellenlänge
-plt.figure(figsize=(10,14))
+plt.figure(figsize=(5,25))
 for idx, summed_image in enumerate(sum_filtered_images):
     plt.subplot(len(wavelengths), 1, idx + 1)
     plt.imshow(summed_image, cmap=colormap)
@@ -153,7 +153,7 @@ plt.savefig(out_path + "Aktivierungsfunktion")
 # Bestimme Texturmerkmal Average Absolute Deviation (AAD) [nach Jain & Bhattacharjee (1992)]
 # Dieses enthält ein Maß für die mittlere "Texturenergie" in der Umgebung MxM
 # M = 9                 # Alternative: fester Wert für M
-M = int(5 * sigma)      # Wähle in Abhängigkeit der Standardabweichung. Hier Faktor 5 gewählt
+M = int(20 * sigma)      # Wähle in Abhängigkeit der Standardabweichung. Hier Faktor 5 gewählt
 
 if M & 2 == 0:          # M muss ungerade sein!
     M = M + 1
@@ -228,7 +228,7 @@ for i in range(feature_vectors.shape[1]):
 # print((feature_vectors[19191]))    # debugging
 
 # K-Means-Clustering
-k = 2       # Wähle sinnvolle Clusteranzahl !
+k = 8       # Wähle sinnvolle Clusteranzahl !
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)                           # termination criteria: max_iter oder epsilon
 _, labels, centers = cv2.kmeans(feature_vectors, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)  # Standardverwendung
 
