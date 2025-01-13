@@ -53,7 +53,7 @@ orientations = [0, np.pi/4, np.pi/2, 3*np.pi/4]
 
 wavelengths = struktur_frequenzen[image_name]
 k_sigma = 12.0                                 # Faktor für Standardabweichung
-b = 0.01                                        # Bandbreite 
+b = 0.5                                        # Bandbreite: größeres b <-> kleineres sigma 
 ######### Alternativ, automatische Festlegung von lambda 
 # Min: 4/sqrt(2) = 2*sqrt(2) 
 #       -> ein Pixel hat Hypotenuse sqrt(2), 2 zueinander Diagonale Pixel ergeben doppelte Distanz
@@ -77,11 +77,14 @@ if variable_kernel:
 
 filterbank = {}
 filtered_img_bank = []
+sum_filtered_images = []
 # loop über wellenlängen, dann loop über orientierungen
 for i, lambd in enumerate(wavelengths):
+    summed_image = np.zeros((width,height))   # Initialisiere Summenbild
     if variable_kernel:
         kernel_size = (ksize[i],ksize[i])
         k_sigma = lambd/np.pi * np.sqrt(np.log(2)/2) * (2**b + 1)/(2**b - 1) # experimentell, für vernünftige Ergebnisse auskommentieren
+        # print((k_sigma,lambd))
     else:
         kernel_size = (ksize,ksize)
     for theta in orientations:
@@ -89,7 +92,11 @@ for i, lambd in enumerate(wavelengths):
         key = f"theta_{int(theta*180/np.pi)}_lambda_{round(lambd,1)}"
         filterbank[key] = kernel
         filterresponse = cv2.filter2D(image,cv2.CV_32FC1, kernel)
+        # print(filterresponse.shape)
         filtered_img_bank.append(filterresponse)
+        summed_image += filterresponse   # Summiere die Antwort
+    # Füge das Summenbild der Liste hinzu
+    sum_filtered_images.append(summed_image)
 
 plt.figure(figsize=(15,10))
 for idx, filtered_img in enumerate(filtered_img_bank):
@@ -101,6 +108,14 @@ for idx, filtered_img in enumerate(filtered_img_bank):
 plt.tight_layout()
 plt.savefig(f"./out/response_collection_dynKernel_{variable_kernel}_{image_name[:-4]}_lambdaMax_{round(lambd,1)}.png",dpi=300, bbox_inches='tight',transparent=False)
 
+# Visualisierung der Summenbilder für jede gewählte Wellenlänge
+plt.figure(figsize=(10,14))
+for idx, summed_image in enumerate(sum_filtered_images):
+    plt.subplot(len(wavelengths), 1, idx + 1)
+    plt.imshow(summed_image)
+    plt.title(f"Wavelength: {wavelengths[idx]:.2f}")
+    plt.axis('off')
+    plt.colorbar()
 
 # plt.figure()
 # plt.imshow(kernel)
@@ -108,4 +123,5 @@ plt.savefig(f"./out/response_collection_dynKernel_{variable_kernel}_{image_name[
 # plt.axis('off')
 # plt.colorbar()
 # # plt.savefig(f"./out/{key}_gabor_kernel.png", dpi=300, bbox_inches='tight', transparent=False)
-# plt.show()
+
+plt.show()
