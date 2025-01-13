@@ -207,7 +207,7 @@ feature_vectors = []
 for y in range(height):
     for x in range(width):
         feature_vector = []
-        for featureImage in aadImages:        # hier nicht sum_filtered_images, sondern aad_images verwenden
+        for featureImage in sum_filtered_images:        # hier nicht sum_filtered_images, sondern aad_images verwenden
             #print(featureImage[y,x])
             feature_vector.append(featureImage[y,x])
 

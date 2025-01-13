@@ -17,6 +17,8 @@ image_folder = '../images'
 
 # Alle Bilddateien im Ordner finden
 image_files = [f for f in os.listdir(image_folder) if f.endswith(('.jpg', '.png', '.jpeg'))]
+# image_files = ['../images/easySynthetic1.png']
+# filename = 'easySynthetic1Freq.png'
 
 for image_file in image_files:
 
@@ -35,8 +37,8 @@ for image_file in image_files:
     magnitude_spectrum = np.abs(fshift)
 
     # Visualisierung des Frequenzspektrums
-    plt.imshow(np.log(magnitude_spectrum + 1))
-    plt.title(f'Frequenzspektrum (logarithmisch) - {image_file}')
+    plt.imshow(np.log(magnitude_spectrum + 1),cmap='gray')
+    plt.title(f'Amplitudenspektrum (log) - {image_file}')
     plt.colorbar()
     plt.xlabel('Frequenz X')            # Achsenbeschriftung
     plt.ylabel('Frequenz Y')
@@ -55,4 +57,6 @@ for image_file in image_files:
     plt.xticks(xticks, labels=xticklabels.astype(int))
     plt.yticks(yticks, labels=yticklabels.astype(int))
 
+    saveTo = '../out/frequency/freq_'+image_file
+    plt.savefig(saveTo)
     plt.show()

@@ -3,6 +3,17 @@
 ## Google Drive Präsentation
 [Gabor-Filter](https://docs.google.com/presentation/d/14SjZZfaMBFQu1au9Zh6sT888lLA81IJ94J1iDLPqCm4/edit?usp=sharing)
 
+## Struktur des Repos:
+- Ausführbahre Skripte befinden sich im ordner `src`
+  - `getFrequencyOfImages.py` veranschaulicht den Frequenzraum von Bildern
+  - `easyExamples.py` veranschaulicht die dynamische Wahl von Kernelgrößen und Standardabweichungen basierend auf der Wellenlänge
+  - `interactive_gabor.py` veranschaulicht den Einfluss der Parameter auf die Filtermaske
+  - `ownImplementation.py` enthält eine eigene Implementierung der Gabor-Funktion und einen Vergleich mit den Funktionen aus den `cv2` und `scikit-image` Paketen
+  - `segmetnation*.py` enthalten Workflows zur Segmentierung mithilfe von Gabor-Filtern für verschiedene Bilder
+- Eingabebilder befinden sich im ordner `images`
+- Ausgabedateien und -bilder befinden sich im ordner `out` in Unterordnern für das jeweilige Eingabebild
+  - Der Ordner `old` enthält frühere/falsche (Zwischen-)Ergebnisse, welche nur für die Historie noch gespeichert werden.
+
 ## Hilfreiche Links:
 - [Youtube-Video zum Gabor-Filter](https://www.youtube.com/watch?v=QEz4bG9P3Qs)
 - [Basic Beispiel zum erstellen von Gabor-Filterkerneln mit openCV](https://www.geeksforgeeks.org/opencv-getgaborkernel-method/)
@@ -18,8 +29,7 @@
 ## Sonstige Links:
 - [Gabor-Filter für Edge Detection](https://www.freedomvc.com/index.php/2021/10/16/gabor-filter-in-edge-detection/)
 
-
-## TODO:
+## TODO für Präsentation:
 - Zu klärende Themen
   - Optimale Kernelgröße
   - Optimale Wellenlängen / welche verwenden? Immer Alle oder nur kleiner bereich?

@@ -35,7 +35,7 @@ def getMyGaborKernelReal(ksize = 31, lambd = 11, theta = 0.0, sigma = 3.0, gamma
 ksize = 31              # Größe des Gabor-Filters
 lambd = 2*np.sqrt(2)              # Wellenlänge
 f = 1/lambd             # Frequenz
-theta = np.pi/1         # Orientierung des Filters (in Radiant)
+theta = np.pi/4         # Orientierung des Filters (in Radiant)
 sigma = 2.0             # Breite der Gausschen Hüllkurve
 sigma = lambd * 1.0
 gamma = 1.0             # Form des Filters (1.0 kreisförmig)
@@ -76,41 +76,45 @@ scikitKernel_mag_spectrum = np.abs(scikitKernel_f_shifted)
 plt.figure(figsize=(12, 6))
 
 # Original Gabor-Filter im Bildraum
-plt.subplot(3, 2, 1)
-plt.imshow(myKernel)
+#plt.subplot(3, 2, 1)
+plt.figure()
+plt.imshow(myKernel,cmap='gray')
 plt.title('Gabor-Filter im Bildraum')
 plt.colorbar()
 plt.axis('off')
+plt.savefig('../out/Gabor_Kernel_Imagespace.png')
 
-plt.subplot(3, 2, 3)
-plt.imshow(cvKernel)
-plt.title('Gabor-Filter im Bildraum - opencv')
-plt.colorbar()
-plt.axis('off')
+# plt.subplot(3, 2, 3)
+# plt.imshow(cvKernel)
+# plt.title('Gabor-Filter im Bildraum - opencv')
+# plt.colorbar()
+# plt.axis('off')
 
-plt.subplot(3, 2, 5)
-plt.imshow(scikitKernelRealPart)
-plt.title('Gabor-Filter im Bildraum - scikit-image')
-plt.colorbar()
-plt.axis('off')
+# plt.subplot(3, 2, 5)
+# plt.imshow(scikitKernelRealPart)
+# plt.title('Gabor-Filter im Bildraum - scikit-image')
+# plt.colorbar()
+# plt.axis('off')
 
 # Frequenzspektrum des Gabor-Filters
-plt.subplot(3, 2, 2)
-plt.imshow(myKernel_mag_spectrum)
+#plt.subplot(3, 2, 2)
+plt.figure()
+plt.imshow(myKernel_mag_spectrum,cmap='gray')
 plt.title('Frequenzspektrum des Gabor-Filters')
 plt.colorbar()
 plt.axis('off')
+plt.savefig('../out/Gabor_Bandpass_Frequency.png')
 
-plt.subplot(3, 2, 4)
-plt.imshow(cvKernel_mag_spectrum)
-plt.title('Gabor-Filter im Bildraum - opencv')
-plt.colorbar()
-plt.axis('off')
+# plt.subplot(3, 2, 4)
+# plt.imshow(cvKernel_mag_spectrum)
+# plt.title('Gabor-Filter im Bildraum - opencv')
+# plt.colorbar()
+# plt.axis('off')
 
-plt.subplot(3, 2, 6)
-plt.imshow(scikitKernel_mag_spectrum)
-plt.title('Gabor-Filter im Bildraum - scikit-image')
-plt.colorbar()
-plt.axis('off')
+# plt.subplot(3, 2, 6)
+# plt.imshow(scikitKernel_mag_spectrum)
+# plt.title('Gabor-Filter im Bildraum - scikit-image')
+# plt.colorbar()
+# plt.axis('off')
 
 plt.show()

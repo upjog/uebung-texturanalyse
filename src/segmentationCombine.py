@@ -11,7 +11,7 @@
 
 # Gute Einstellparameter für dieses Bild
 # - ksize=31, gamma = 1.0, psi = 0, sigma = 5.0 , Glättungsfaktor für M: 20
-#
+# - ksize=3*wavelength, gamma = 0.5, psi=0, sigma=ksize/6 , Glättungsfunktion für M: 3
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,6 +29,12 @@ colormap = 'jet'            # Auswahl der Colorbar
 
 height, width = image.shape                             # Breite und Hoehe des Bildes
 print("Bildbreite: ", width, "Bildhöhe: ",height)
+
+# Festlegung, ob Kernelsize an Wellenlänge gekoppelt werden soll
+variable_kernel = False
+
+# Festlegung, ob sigma an kernelgröße gekoppelt werden soll
+variable_sigma = False
 
 # === Definition Filterbankparameter ===
 ksize = 31                  # Kernelgröße 31
@@ -58,17 +64,26 @@ lambd_max = np.sqrt(np.abs(width)**2 + np.abs(height)**2)/2
 n = int(np.log2(lambd_max/lambd_min))               # Anzahl an Schritten min->max mit Exponent von 2
 print("Number of wavelength steps: ", n)
 wavelengths = 2**np.arange((n-1)) * lambd_min       # Nutze alle Wellenlängen ohne Begrenzung
-wavelengths = wavelengths[:4]
+wavelengths = wavelengths[:4]                       # Begrenze auf kleinere Wellenlängen
+
+# Wenn Kernelgröße als variabel festgelegt wird
+if variable_kernel:
+    ksize = 3*np.array(wavelengths).astype(int)
 
 # === Erstelle Filterbank und filtere Bild ===
 filterbank = {}
 filtered_img_bank_normalized = []
 
 # Schleife über Wellenlängen und Ausrichtungen
-for lambd in wavelengths:
+for i, lambd in enumerate(wavelengths):
     for theta in orientations:
-        kernel = cv2.getGaborKernel((ksize,ksize), sigma, theta, lambd, gamma, psi, ktype=cv2.CV_32FC1)     # erzeuge Filterkernel
-        key = f"theta_{int(theta*180/np.pi)}_lambda_{round(lambd,1)}"                                       # erzeuge key für dict
+        if variable_kernel:
+            if variable_sigma:
+                sigma = int(ksize[i]/6)
+                kernel = cv2.getGaborKernel((ksize[i],ksize[i]), sigma, theta, lambd, gamma, psi, ktype=cv2.CV_32FC1)     # erzeuge Filterkernel
+        else:
+            kernel = cv2.getGaborKernel((ksize,ksize), sigma, theta, lambd, gamma, psi, ktype=cv2.CV_32FC1)     # erzeuge Filterkernel
+        key = f"th_{int(theta*180/np.pi)}_la_{round(lambd,1)}"                                       # erzeuge key für dict
         filterbank[key] = kernel
 
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

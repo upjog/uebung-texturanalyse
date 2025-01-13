@@ -1,0 +1,12 @@
+name: env-texturanalyse
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - numpy
+  - matplotlib
+  - opencv
+  - scikit-learn
+  - scikit-image
+  - scipy
