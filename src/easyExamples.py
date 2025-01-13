@@ -53,7 +53,7 @@ orientations = [0, np.pi/4, np.pi/2, 3*np.pi/4]
 
 wavelengths = struktur_frequenzen[image_name]
 k_sigma = 12.0                                 # Faktor für Standardabweichung
-
+b = 0.01                                        # Bandbreite 
 ######### Alternativ, automatische Festlegung von lambda 
 # Min: 4/sqrt(2) = 2*sqrt(2) 
 #       -> ein Pixel hat Hypotenuse sqrt(2), 2 zueinander Diagonale Pixel ergeben doppelte Distanz
@@ -74,15 +74,14 @@ wavelengths = rep_or_ins(wavelengths,wavelengths2,3)
 
 if variable_kernel:
     ksize = 3*np.array(wavelengths).astype(int)
-    # entferne alle Kernelgrößen die größer als die kleinere Bilddimension sind
-    # ksize = ksize[ksize < min(width,height)] # damit würde die innere Schleife kaputt gehen
 
 filterbank = {}
 filtered_img_bank = []
-# loop über orientierungen, dann loop über wellenlängen
+# loop über wellenlängen, dann loop über orientierungen
 for i, lambd in enumerate(wavelengths):
-    if isinstance(ksize,np.ndarray):
+    if variable_kernel:
         kernel_size = (ksize[i],ksize[i])
+        k_sigma = lambd/np.pi * np.sqrt(np.log(2)/2) * (2**b + 1)/(2**b - 1) # experimentell, für vernünftige Ergebnisse auskommentieren
     else:
         kernel_size = (ksize,ksize)
     for theta in orientations:
