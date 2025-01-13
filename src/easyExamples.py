@@ -70,20 +70,21 @@ wavelengths2 = 2**np.arange((n-1)) * lambd_min       # Wellenlängen als Potenze
 # # Kombination von beiden Lsiten. Wenn die manuell festgelegte Wellenlänge nahe an einer Potenz von 
 # # 2 liegt, ersetzt diese den entsprechenden Eintrag in der automatisch generierten Liste.
 # # Sonst wird die manuelle Wellenlänge ergänzt
-wavelengths = rep_or_ins(wavelengths,wavelengths2,3)
+# wavelengths = rep_or_ins(wavelengths,wavelengths2,3)
 
 if variable_kernel:
     ksize = 3*np.array(wavelengths).astype(int)
 
 filterbank = {}
 filtered_img_bank = []
+img_bank = []
 sum_filtered_images = []
 # loop über wellenlängen, dann loop über orientierungen
 for i, lambd in enumerate(wavelengths):
     summed_image = np.zeros((width,height))   # Initialisiere Summenbild
     if variable_kernel:
         kernel_size = (ksize[i],ksize[i])
-        k_sigma = lambd/np.pi * np.sqrt(np.log(2)/2) * (2**b + 1)/(2**b - 1) # experimentell, für vernünftige Ergebnisse auskommentieren
+        # k_sigma = lambd/np.pi * np.sqrt(np.log(2)/2) * (2**b + 1)/(2**b - 1) # experimentell, für vernünftige Ergebnisse auskommentieren
         # print((k_sigma,lambd))
     else:
         kernel_size = (ksize,ksize)
@@ -94,28 +95,41 @@ for i, lambd in enumerate(wavelengths):
         filterresponse = cv2.filter2D(image,cv2.CV_32FC1, kernel)
         # print(filterresponse.shape)
         filtered_img_bank.append(filterresponse)
+        img_bank.append(filterresponse)
         summed_image += filterresponse   # Summiere die Antwort
     # Füge das Summenbild der Liste hinzu
     sum_filtered_images.append(summed_image)
+    img_bank.append(summed_image)
 
-plt.figure(figsize=(15,10))
-for idx, filtered_img in enumerate(filtered_img_bank):
-    plt.subplot(len(wavelengths),len(orientations),idx+1)
+temp = 1
+plt.figure(figsize=(7,7))
+for idx, filtered_img in enumerate(img_bank):
+    ax = plt.subplot(len(wavelengths),len(orientations)+1,idx+1)
     plt.imshow(filtered_img,cmap='gray')
-    plt.title(f"{list(filterbank.keys())[idx]}")
     plt.axis('off')
 
+    if idx == 0:
+        ax.set_title(f"{orientations[idx]*180/np.pi}°, lambda {round(wavelengths[0],1)}")
+    elif idx < 4:
+        ax.set_title(f"{orientations[idx]*180/np.pi}°")
+    elif idx == 4:
+        ax.set_title("Summenbild\nFilterantwort")
+    elif (idx%5 == 0) & (idx!=0):
+        ax.set_title(f"lambda {round(wavelengths[temp],1)}")
+        temp += 1
+
 plt.tight_layout()
+plt.subplots_adjust(wspace=0.3, hspace=0.3)
 plt.savefig(f"./out/response_collection_dynKernel_{variable_kernel}_{image_name[:-4]}_lambdaMax_{round(lambd,1)}.png",dpi=300, bbox_inches='tight',transparent=False)
 
 # Visualisierung der Summenbilder für jede gewählte Wellenlänge
-plt.figure(figsize=(10,14))
-for idx, summed_image in enumerate(sum_filtered_images):
-    plt.subplot(len(wavelengths), 1, idx + 1)
-    plt.imshow(summed_image)
-    plt.title(f"Wavelength: {wavelengths[idx]:.2f}")
-    plt.axis('off')
-    plt.colorbar()
+# plt.figure(figsize=(10,14))
+# for idx, summed_image in enumerate(sum_filtered_images):
+#     plt.subplot(len(wavelengths), 1, idx + 1)
+#     plt.imshow(summed_image,cmap='gray')
+#     plt.title(f"Wavelength: {wavelengths[idx]:.2f}")
+#     plt.axis('off')
+#     plt.colorbar()
 
 # plt.figure()
 # plt.imshow(kernel)
@@ -124,4 +138,4 @@ for idx, summed_image in enumerate(sum_filtered_images):
 # plt.colorbar()
 # # plt.savefig(f"./out/{key}_gabor_kernel.png", dpi=300, bbox_inches='tight', transparent=False)
 
-plt.show()
+# plt.show()
