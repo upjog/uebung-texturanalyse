@@ -1,7 +1,7 @@
 # Uebung 1 zu Objektextraktion: Texturanalyse mit dem Gabor-Filter
 
 ## Google Drive Präsentation
-[Gabor-Filter](https://docs.google.com/presentation/d/1Az53VhTfEZDUxxQgWjQuA3IHnuoYhAEemqrziNHTCFU/edit?usp=sharing)
+[Gabor-Filter](https://docs.google.com/presentation/d/14SjZZfaMBFQu1au9Zh6sT888lLA81IJ94J1iDLPqCm4/edit?usp=sharing)
 
 ## Struktur des Repos:
 - Ausführbahre Skripte befinden sich im Ordner `src`
